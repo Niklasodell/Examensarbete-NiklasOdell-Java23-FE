@@ -1,30 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { getWishlist, deleteBook } from '../services/WishListService';
-import BookCard from './BookCard';
 
 const Wishlist = () => {
   const [books, setBooks] = useState([]);
 
-  const fetchWishlist = async () => {
-    const response = await getWishlist();
-    setBooks(response.data);
-  };
-
   useEffect(() => {
-    fetchWishlist();
-  }, []);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in to view this page.');
+      window.location.href = '/login';
+      return;
+    }
 
-  const handleDelete = async (id: number) => {
-    await deleteBook(id);
-    fetchWishlist();
-  };
+    fetch('http://localhost:8080/api/wishlist', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((res) => res.json())
+      .then(setBooks)
+      .catch((err) => {
+        console.error(err);
+        alert('Failed to fetch wishlist');
+      });
+  }, []);
 
   return (
     <div>
       <h2>My Wishlist</h2>
-      {books.map((book: any) => (
-        <BookCard key={book.id} book={book} onDelete={handleDelete} />
-      ))}
+      <ul>
+        {books.map((book: any) => (
+          <li key={book.id}>{book.title} by {book.author}</li>
+        ))}
+      </ul>
     </div>
   );
 };

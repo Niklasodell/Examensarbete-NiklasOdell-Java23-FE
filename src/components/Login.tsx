@@ -7,9 +7,9 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await login(username, password);
-      localStorage.setItem('token', response.data);
+      await login(username, password);
       alert('Login successful!');
+      window.location.href = '/wishlist';
     } catch (error) {
       console.error(error);
       alert('Login failed');
