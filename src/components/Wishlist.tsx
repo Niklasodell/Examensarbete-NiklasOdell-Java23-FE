@@ -1,24 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  imageUrl: string;
+  status: string;
+}
 
 const Wishlist = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/wishlist')
-      .then((res) => res.json())
-      .then(setBooks)
-      .catch((err) => {
-        console.error(err);
-        alert('Failed to fetch wishlist');
+    fetch("/api/wishlist", {
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => setBooks(data))
+      .catch((error) => {
+        console.error("Error fetching wishlist:", error);
+        setError("Kunde inte hämta önskelistan");
       });
   }, []);
 
   return (
     <div>
-      <h2>My Wishlist</h2>
+      <h2>Min önskelista</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <ul>
-        {books.map((book: any) => (
-          <li key={book.id}>{book.title} by {book.author}</li>
+        {books.map((book) => (
+          <li key={book.id}>{book.title} av {book.author}</li>
         ))}
       </ul>
     </div>

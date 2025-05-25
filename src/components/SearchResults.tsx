@@ -7,12 +7,12 @@ interface Book {
     title: string;
     authors?: string[];
     imageLinks?: {
-      thumbnail: string;
+      thumbnail?: string;
     };
   };
 }
 
-interface SearchResultsProps {
+interface SearchResultsProps {  
   results: Book[];
 }
 
@@ -21,7 +21,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results }) => {
     const newBook = {
       title: book.volumeInfo.title,
       author: book.volumeInfo.authors ? book.volumeInfo.authors[0] : 'Unknown',
-      imageUrl: book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : '',
+      imageUrl: book.volumeInfo.imageLinks?.thumbnail || '',
       status: 'pending',
     };
 
@@ -40,11 +40,16 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results }) => {
         results.map((book) => (
           <div key={book.id} className="search-result-card">
             <img
-              src={book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/150'}
+              src={
+                book.volumeInfo.imageLinks?.thumbnail?.startsWith('http')
+                  ? book.volumeInfo.imageLinks.thumbnail
+                  : 'https://dummyimage.com/150x200/cccccc/000000&text=No+Image'
+              }
               alt={book.volumeInfo.title}
+              loading="lazy"
             />
             <h3>{book.volumeInfo.title}</h3>
-            <p>{book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown Author'}</p>
+            <p>{book.volumeInfo.authors?.join(', ') || 'Unknown Author'}</p>
             <button onClick={() => handleAddBook(book)}>Add to Wishlist</button>
           </div>
         ))
