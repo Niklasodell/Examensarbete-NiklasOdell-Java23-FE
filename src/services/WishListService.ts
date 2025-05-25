@@ -1,33 +1,19 @@
 import axios from 'axios';
-import { getToken } from './AuthService';
 
-const WISHLIST_URL = 'api/wishlist';
-
-const getAuthHeaders = () => {
-  const token = getToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+const WISHLIST_URL = '/api/wishlist';
 
 export const getWishlist = () => {
-  return axios.get(WISHLIST_URL, {
-    headers: getAuthHeaders()
-  });
+  return axios.get(WISHLIST_URL);
 };
 
 export const addBook = (book: any) => {
-  return axios.post(WISHLIST_URL, book, {
-    headers: getAuthHeaders()
-  });
+  return axios.post(WISHLIST_URL, book);
 };
 
 export const updateBook = (id: number, book: any) => {
-  return axios.put(`${WISHLIST_URL}/${id}`, book, {
-    headers: getAuthHeaders()
-  });
+  return axios.put(`${WISHLIST_URL}/${id}`, book);
 };
 
 export const deleteBook = (id: number) => {
-  return axios.delete(`${WISHLIST_URL}/${id}`, {
-    headers: getAuthHeaders()
-  });
+  return axios.delete(`${WISHLIST_URL}/${id}`);
 };

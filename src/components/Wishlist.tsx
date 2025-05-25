@@ -4,18 +4,7 @@ const Wishlist = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('You must be logged in to view this page.');
-      window.location.href = '/login';
-      return;
-    }
-
-    fetch('http://localhost:8080/api/wishlist', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    fetch('http://localhost:8080/api/wishlist')
       .then((res) => res.json())
       .then(setBooks)
       .catch((err) => {
