@@ -15,7 +15,17 @@ const Header = () => {
 
   return (
     <header className="w-full bg-gray-800 text-white shadow-md p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold">Book Wishlist</h1>
+      <div className="flex items-center space-x-4">
+        <h1 className="text-xl font-bold cursor-pointer" onClick={() => navigate("/wishlist")}>
+          Book Wishlist
+        </h1>
+        <button onClick={() => navigate("/wishlist")} className="hover:underline">
+          Wishlist
+        </button>
+        <button onClick={() => navigate("/search")} className="hover:underline">
+          Sök
+        </button>
+      </div>
       <button
         onClick={handleLogout}
         className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
