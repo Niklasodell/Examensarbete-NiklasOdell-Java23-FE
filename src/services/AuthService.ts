@@ -22,6 +22,8 @@ export const register = async (username: string, password: string): Promise<void
   });
 
   if (!response.ok) {
-    throw new Error('Registration failed');
+    const errorText = await response.text();
+    console.error("Registration failed:", errorText);
+    throw new Error("Registration failed");
   }
 };
