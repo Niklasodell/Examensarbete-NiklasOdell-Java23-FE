@@ -45,9 +45,30 @@ const Login = () => {
           style={{ padding: '0.5rem', width: '100%' }}
         />
       </div>
-      <button onClick={handleLogin} style={{ padding: '0.5rem 1rem' }}>
+      <button onClick={handleLogin} style={{ padding: '0.5rem 1rem', marginBottom: '1rem' }}>
         Login
       </button>
+
+      <hr style={{ margin: '1.5rem 0' }} />
+
+      <div>
+        <p style={{ marginBottom: '0.5rem', fontWeight: 'bold' }}>
+          Om du ej har registrerat dig:
+        </p>
+        <button
+          onClick={() => (window.location.href = '/register')}
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: '#6c63ff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Gå till registrering
+        </button>
+      </div>
     </div>
   );
 };

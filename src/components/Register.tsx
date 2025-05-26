@@ -28,7 +28,7 @@ const Register = () => {
         minWidth: '300px',
       }}
     >
-      <h2 style={{ marginBottom: '1rem' }}>Register</h2>
+      <h2 style={{ marginBottom: '1rem' }}>Registrera dig</h2>
       <div style={{ marginBottom: '1rem' }}>
         <input
           type="text"
@@ -45,9 +45,30 @@ const Register = () => {
           style={{ padding: '0.5rem', width: '100%' }}
         />
       </div>
-      <button onClick={handleRegister} style={{ padding: '0.5rem 1rem' }}>
-        Register
+      <button onClick={handleRegister} style={{ padding: '0.5rem 1rem', marginBottom: '1rem' }}>
+        Registrera
       </button>
+
+      <hr style={{ margin: '1.5rem 0' }} />
+
+      <div>
+        <p style={{ marginBottom: '0.5rem', fontWeight: 'bold' }}>
+          Om du redan har ett konto:
+        </p>
+        <button
+          onClick={() => (window.location.href = '/login')}
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: '#6c63ff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Gå till inloggning
+        </button>
+      </div>
     </div>
   );
 };
