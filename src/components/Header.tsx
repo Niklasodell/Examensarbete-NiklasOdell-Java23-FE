@@ -1,5 +1,22 @@
 import { useNavigate, Link } from "react-router-dom";
 
+const buttonStyle = {
+  backgroundColor: 'white',
+  padding: '0.5rem 1rem',
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+  textDecoration: 'none',
+  color: 'black',
+  boxShadow: '1px 1px 3px rgba(0,0,0,0.1)',
+};
+
+const logoutButtonStyle = {
+  ...buttonStyle,
+  backgroundColor: '#ff4d4f',
+  color: 'white',
+  border: 'none',
+};
+
 const Header = () => {
   const navigate = useNavigate();
 
@@ -14,30 +31,28 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full bg-gray-800 text-white shadow-md p-4 flex flex-col sm:flex-row justify-between items-center">
-      <Link to="/wishlist" className="text-2xl font-bold mb-2 sm:mb-0 hover:text-yellow-400 transition">
-        📚 Book Wishlist
-      </Link>
-      <nav className="flex gap-4 items-center">
-        <Link
-          to="/wishlist"
-          className="hover:text-yellow-400 transition duration-200"
-        >
-          Hem
-        </Link>
-        <Link
-          to="/search"
-          className="hover:text-yellow-400 transition duration-200"
-        >
-          Sök
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition duration-200"
-        >
-          Logga ut
-        </button>
-      </nav>
+    <header
+      style={{
+        backgroundColor: '#e0f0ff',
+        padding: '1rem',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        borderBottom: '1px solid #add6f3',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        <Link to="/wishlist" style={buttonStyle}>Book Wishlist</Link>
+        <Link to="/wishlist" style={buttonStyle}>Hem</Link>
+        <Link to="/search" style={buttonStyle}>Sök</Link>
+        <button onClick={handleLogout} style={logoutButtonStyle}>Logga ut</button>
+      </div>
     </header>
   );
 };

@@ -11,17 +11,28 @@ const AppContent: React.FC = () => {
   const location = useLocation();
 
   const hideHeader = location.pathname === "/login" || location.pathname === "/register";
+  const isCenteredPage = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
       {!hideHeader && <Header />}
-      <Routes>
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/wishlist" : "/login"} />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/search" element={<SearchBar />} />
-      </Routes>
+
+      <div
+        style={{
+          display: isCenteredPage ? 'flex' : 'block',
+          justifyContent: isCenteredPage ? 'center' : undefined,
+          alignItems: isCenteredPage ? 'center' : undefined,
+          height: isCenteredPage ? '100vh' : 'auto',
+        }}
+      >
+        <Routes>
+          <Route path="/" element={<Navigate to={isAuthenticated ? "/wishlist" : "/login"} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/search" element={<SearchBar />} />
+        </Routes>
+      </div>
     </>
   );
 };

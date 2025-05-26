@@ -32,27 +32,62 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4 text-center">Min önskelista</h2>
-      {error && <p className="text-red-600 text-center mb-4">{error}</p>}
-      <div className="grid sm:grid-cols-2 gap-4">
+    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '1rem' }}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '1rem' }}>
+        Min önskelista
+      </h2>
+
+      {error && (
+        <p style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>
+          {error}
+        </p>
+      )}
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+          gap: '1rem',
+        }}
+      >
         {books.map((book) => (
           <div
             key={book.id}
-            className="border rounded p-3 flex flex-col items-center text-center bg-white shadow-sm"
+            style={{
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              padding: '1rem',
+              backgroundColor: 'white',
+              textAlign: 'center',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+            }}
           >
             {book.imageUrl && (
               <img
                 src={book.imageUrl}
                 alt={book.title}
-                className="w-24 h-auto mb-2 object-cover"
+                style={{
+                  width: '80px',
+                  height: 'auto',
+                  objectFit: 'cover',
+                  marginBottom: '0.5rem',
+                }}
               />
             )}
-            <h3 className="text-lg font-medium">{book.title}</h3>
-            <p className="text-sm text-gray-600">{book.author}</p>
+            <h3 style={{ fontSize: '1rem', fontWeight: '500' }}>{book.title}</h3>
+            <p style={{ fontSize: '0.875rem', color: '#555' }}>{book.author}</p>
             <button
               onClick={() => handleDelete(book.id)}
-              className="mt-2 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+              style={{
+                marginTop: '0.5rem',
+                padding: '0.5rem 1rem',
+                fontSize: '0.875rem',
+                backgroundColor: '#ff4d4f',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
             >
               Ta bort
             </button>
