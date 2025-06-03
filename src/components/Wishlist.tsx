@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWishlist, deleteBook } from "../services/WishListService";
+import ReviewList from "./ReviewList";
+import ReviewForm from "./ReviewForm";
 
 interface Book {
   id: number;
@@ -15,7 +17,16 @@ const Wishlist = () => {
 
   useEffect(() => {
     getWishlist()
-      .then((response) => setBooks(response.data))
+      .then((response) => {
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setBooks(data);
+        } else {
+          console.error("Förväntade en lista av böcker, men fick:", data);
+          setError("Felaktigt format på data från servern");
+          setBooks([]);
+        }
+      })
       .catch((error) => {
         console.error("Error fetching wishlist:", error);
         setError("Kunde inte hämta önskelistan");
@@ -50,7 +61,7 @@ const Wishlist = () => {
           gap: '1rem',
         }}
       >
-        {books.map((book) => (
+        {Array.isArray(books) && books.map((book) => (
           <div
             key={book.id}
             style={{
@@ -76,6 +87,18 @@ const Wishlist = () => {
             )}
             <h3 style={{ fontSize: '1rem', fontWeight: '500' }}>{book.title}</h3>
             <p style={{ fontSize: '0.875rem', color: '#555' }}>{book.author}</p>
+            <p style={{ fontSize: '0.875rem', color: '#555' }}>Status: {book.status}</p>
+
+            {/* Recensioner + Snittbetyg */}
+            <ReviewList bookId={book.id} />
+
+            {/* Formulär för ny recension */}
+            <ReviewForm
+              bookId={book.id}
+              onSuccess={() => {
+              }}
+            />
+
             <button
               onClick={() => handleDelete(book.id)}
               style={{

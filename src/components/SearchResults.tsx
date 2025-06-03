@@ -23,6 +23,8 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results }) => {
       author: book.volumeInfo.authors ? book.volumeInfo.authors[0] : 'Unknown',
       imageUrl: book.volumeInfo.imageLinks?.thumbnail || '',
       status: 'pending',
+      review: '',
+      rating: null
     };
 
     try {
