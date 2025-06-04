@@ -1,96 +1,116 @@
-import React from 'react';
-import { addBook } from '../services/WishListService';
-
-interface Book {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    imageLinks?: {
-      thumbnail?: string;
-    };
-  };
-}
+import { useState } from "react";
+import ReviewModal from "./ReviewModal";
+import { GoogleBook } from '../services/Types';
+import { addBookToWishlist } from '../services/WishListService';
 
 interface SearchResultsProps {
-  results: Book[];
+  books: GoogleBook[];
 }
 
-const SearchResults: React.FC<SearchResultsProps> = ({ results }) => {
-  const handleAddBook = async (book: Book) => {
-    const newBook = {
-      title: book.volumeInfo.title,
-      author: book.volumeInfo.authors ? book.volumeInfo.authors[0] : 'Unknown',
-      imageUrl: book.volumeInfo.imageLinks?.thumbnail || '',
-      status: 'pending',
-      review: '',
-      rating: null
-    };
+const SearchResults: React.FC<SearchResultsProps> = ({ books }) => {
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [selectedBookTitle, setSelectedBookTitle] = useState<string | null>(null);
 
+  const handleAddToWishlist = async (book: GoogleBook) => {
     try {
-      await addBook(newBook);
-      alert('Book added to wishlist!');
-    } catch (error) {
-      console.error('Failed to add book', error);
-      alert('Failed to add book to wishlist.');
+      await addBookToWishlist({
+        title: book.title,
+        author: book.author,
+        imageUrl: book.imageUrl,
+        status: "pending"
+      });
+      alert("Boken har lagts till i din önskelista!");
+    } catch (err) {
+      console.error("Kunde inte lägga till bok:", err);
+      alert("Det gick inte att lägga till boken.");
     }
   };
 
-  if (results.length === 0) {
-    return <p style={{ textAlign: 'center', color: '#555' }}>Inga resultat hittades.</p>;
-  }
-
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-        gap: '1rem',
-      }}
-    >
-      {results.map((book) => (
-        <div
-          key={book.id}
-          style={{
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            padding: '1rem',
-            backgroundColor: 'white',
-            textAlign: 'center',
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.05)',
-          }}
-        >
-          <img
-            src={
-              book.volumeInfo.imageLinks?.thumbnail?.startsWith('http')
-                ? book.volumeInfo.imageLinks.thumbnail
-                : 'https://dummyimage.com/150x200/cccccc/000000&text=No+Image'
-            }
-            alt={book.volumeInfo.title}
-            loading="lazy"
-            style={{ width: '100px', height: 'auto', marginBottom: '0.5rem' }}
-          />
-          <h3 style={{ fontSize: '1rem', fontWeight: 500 }}>{book.volumeInfo.title}</h3>
-          <p style={{ fontSize: '0.875rem', color: '#555' }}>
-            {book.volumeInfo.authors?.join(', ') || 'Unknown Author'}
-          </p>
-          <button
-            onClick={() => handleAddBook(book)}
+    <div style={{ maxWidth: "800px", margin: "2rem auto" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Sökresultat</h2>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: "1rem",
+        }}
+      >
+        {books.map((book) => (
+          <div
+            key={book.id}
             style={{
-              marginTop: '0.5rem',
-              padding: '0.5rem 1rem',
-              fontSize: '0.875rem',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: "1rem",
+              backgroundColor: "white",
+              textAlign: "center",
+              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}
           >
-            Lägg till i önskelistan
-          </button>
-        </div>
-      ))}
+            {book.imageUrl && (
+              <img
+                src={book.imageUrl}
+                alt={book.title}
+                style={{
+                  width: "80px",
+                  height: "auto",
+                  objectFit: "cover",
+                  marginBottom: "0.5rem",
+                }}
+              />
+            )}
+            <h3 style={{ fontSize: "1rem", fontWeight: "500" }}>{book.title}</h3>
+            <p style={{ fontSize: "0.875rem", color: "#555" }}>{book.author}</p>
+
+            <button
+              onClick={() => handleAddToWishlist(book)}
+              style={{
+                marginTop: "0.5rem",
+                marginBottom: "0.5rem",
+                padding: "0.4rem 1rem",
+                fontSize: "0.875rem",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Lägg till i önskelista
+            </button>
+
+            <button
+              onClick={() => {
+                setSelectedBookId(book.id);
+                setSelectedBookTitle(book.title);
+              }}
+              style={{
+                padding: "0.4rem 1rem",
+                fontSize: "0.875rem",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Visa recensioner
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {selectedBookId && selectedBookTitle && (
+        <ReviewModal
+          bookId={Number(selectedBookId)} // OBS: backend förväntar sig kanske `Long`
+          title={selectedBookTitle}
+          onClose={() => {
+            setSelectedBookId(null);
+            setSelectedBookTitle(null);
+          }}
+        />
+      )}
     </div>
   );
 };

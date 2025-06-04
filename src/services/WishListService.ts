@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { WishlistBook } from '../services/Types';
 
 const WISHLIST_URL = '/api/wishlist';
 
@@ -8,7 +9,7 @@ export const getWishlist = () => {
   return axios.get(WISHLIST_URL);
 };
 
-export const addBook = (book: any) => {
+export const addBookToWishlist = (book: Omit<WishlistBook, 'id'>) => {
   return axios.post(WISHLIST_URL, book);
 };
 
@@ -31,4 +32,3 @@ export const getAverageRating = (bookId: number) => {
 export const submitReview = (bookId: number, reviewData: { reviewText: string, rating: number }) => {
   return axios.post(`/api/reviews/${bookId}`, reviewData);
 };
-

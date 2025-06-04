@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { searchBooks } from '../services/GoogleBooksService';
 import SearchResults from './SearchResults';
+import { GoogleBook } from '../services/Types';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [books, setBooks] = useState<GoogleBook[]>([]);
 
   const handleSearch = async () => {
     const response = await searchBooks(query);
-    setResults(response.data.items || []);
+    const items = response.data.items || [];
+
+    const formattedBooks: GoogleBook[] = items.map((item: any) => ({
+      id: item.id,
+      title: item.volumeInfo.title || 'Okänd titel',
+      author: item.volumeInfo.authors?.[0] || 'Okänd författare',
+      imageUrl: item.volumeInfo.imageLinks?.thumbnail || '',
+    }));
+
+    setBooks(formattedBooks);
   };
 
   return (
@@ -19,6 +29,7 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Skriv titel eller författare..."
+          value={query}
           onChange={(e) => setQuery(e.target.value)}
           style={{
             padding: '0.5rem',
@@ -42,7 +53,7 @@ const SearchBar = () => {
         </button>
       </div>
 
-      <SearchResults results={results} />
+      <SearchResults books={books} />
     </div>
   );
 };
