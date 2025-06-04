@@ -17,6 +17,13 @@ const logoutButtonStyle = {
   border: 'none',
 };
 
+const deleteButtonStyle = {
+  ...buttonStyle,
+  backgroundColor: '#6c757d',
+  color: 'white',
+  border: 'none',
+};
+
 const Header = () => {
   const navigate = useNavigate();
 
@@ -28,6 +35,29 @@ const Header = () => {
 
     localStorage.removeItem("token");
     navigate("/login");
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm("Är du säker på att du vill ta bort ditt konto?");
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/delete", {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        alert("Ditt konto har tagits bort.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        alert("Kunde inte ta bort kontot.");
+      }
+    } catch (error) {
+      console.error("Fel vid borttagning:", error);
+      alert("Ett fel uppstod.");
+    }
   };
 
   return (
@@ -52,6 +82,7 @@ const Header = () => {
         <Link to="/wishlist" style={buttonStyle}>Hem</Link>
         <Link to="/search" style={buttonStyle}>Sök</Link>
         <button onClick={handleLogout} style={logoutButtonStyle}>Logga ut</button>
+        <button onClick={handleDeleteAccount} style={deleteButtonStyle}>Ta bort konto</button>
       </div>
     </header>
   );

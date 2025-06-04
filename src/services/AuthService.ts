@@ -1,4 +1,7 @@
+import axios from 'axios';
+
 export const login = async (username: string, password: string): Promise<void> => {
+
   const response = await fetch('/api/auth/login', {
     method: 'POST',
     headers: {
@@ -26,4 +29,8 @@ export const register = async (username: string, password: string): Promise<void
     console.error("Registration failed:", errorText);
     throw new Error("Registration failed");
   }
+};
+
+export const deleteAccount = () => {
+  return axios.delete('/api/auth/delete', { withCredentials: true });
 };
