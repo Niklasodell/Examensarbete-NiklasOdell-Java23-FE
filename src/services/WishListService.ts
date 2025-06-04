@@ -32,3 +32,19 @@ export const getAverageRating = (bookId: number) => {
 export const submitReview = (bookId: number, reviewData: { reviewText: string, rating: number }) => {
   return axios.post(`/api/reviews/${bookId}`, reviewData);
 };
+
+export const getBookByTitle = async (title: string) => {
+  return axios.get(`/api/wishlist/by-title?title=${encodeURIComponent(title)}`);
+};
+
+export const getReviewsByTitle = (title: string) => {
+  return axios.get(`/api/reviews/by-title?title=${encodeURIComponent(title)}`);
+};
+
+export const getAverageRatingByTitle = (title: string) => {
+  return axios.get(`/api/reviews/by-title/average?title=${encodeURIComponent(title)}`);
+};
+
+export const submitReviewByTitle = (title: string, reviewData: { reviewText: string, rating: number }) => {
+  return axios.post(`/api/reviews/by-title?title=${encodeURIComponent(title)}`, reviewData);
+};

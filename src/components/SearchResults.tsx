@@ -8,7 +8,6 @@ interface SearchResultsProps {
 }
 
 const SearchResults: React.FC<SearchResultsProps> = ({ books }) => {
-  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [selectedBookTitle, setSelectedBookTitle] = useState<string | null>(null);
 
   const handleAddToWishlist = async (book: GoogleBook) => {
@@ -24,6 +23,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({ books }) => {
       console.error("Kunde inte lägga till bok:", err);
       alert("Det gick inte att lägga till boken.");
     }
+  };
+
+  const handleShowReviews = (title: string) => {
+    setSelectedBookTitle(title);
   };
 
   return (
@@ -81,10 +84,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ books }) => {
             </button>
 
             <button
-              onClick={() => {
-                setSelectedBookId(book.id);
-                setSelectedBookTitle(book.title);
-              }}
+              onClick={() => handleShowReviews(book.title)}
               style={{
                 padding: "0.4rem 1rem",
                 fontSize: "0.875rem",
@@ -101,14 +101,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({ books }) => {
         ))}
       </div>
 
-      {selectedBookId && selectedBookTitle && (
+      {selectedBookTitle && (
         <ReviewModal
-          bookId={Number(selectedBookId)} // OBS: backend förväntar sig kanske `Long`
-          title={selectedBookTitle}
-          onClose={() => {
-            setSelectedBookId(null);
-            setSelectedBookTitle(null);
-          }}
+          bookTitle={selectedBookTitle}
+          onClose={() => setSelectedBookTitle(null)}
         />
       )}
     </div>

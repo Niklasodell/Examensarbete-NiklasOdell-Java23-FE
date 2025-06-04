@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWishlist, deleteBook } from "../services/WishListService";
-import ReviewList from "./ReviewList";
-import ReviewForm from "./ReviewForm";
+import ReviewModal from "./ReviewModal";
 
 interface Book {
   id: number;
@@ -14,6 +13,7 @@ interface Book {
 const Wishlist = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedBookTitle, setSelectedBookTitle] = useState<string | null>(null);
 
   useEffect(() => {
     getWishlist()
@@ -61,7 +61,7 @@ const Wishlist = () => {
           gap: '1rem',
         }}
       >
-        {Array.isArray(books) && books.map((book) => (
+        {books.map((book) => (
           <div
             key={book.id}
             style={{
@@ -89,15 +89,21 @@ const Wishlist = () => {
             <p style={{ fontSize: '0.875rem', color: '#555' }}>{book.author}</p>
             <p style={{ fontSize: '0.875rem', color: '#555' }}>Status: {book.status}</p>
 
-            {/* Recensioner + Snittbetyg */}
-            <ReviewList bookId={book.id} />
-
-            {/* Formulär för ny recension */}
-            <ReviewForm
-              bookId={book.id}
-              onSuccess={() => {
+            <button
+              onClick={() => setSelectedBookTitle(book.title)}
+              style={{
+                marginTop: "0.5rem",
+                padding: "0.4rem 1rem",
+                fontSize: "0.875rem",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
               }}
-            />
+            >
+              Visa recensioner
+            </button>
 
             <button
               onClick={() => handleDelete(book.id)}
@@ -117,6 +123,13 @@ const Wishlist = () => {
           </div>
         ))}
       </div>
+
+      {selectedBookTitle && (
+        <ReviewModal
+          bookTitle={selectedBookTitle}
+          onClose={() => setSelectedBookTitle(null)}
+        />
+      )}
     </div>
   );
 };
