@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { login } from '../services/AuthService';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleLogin = async () => {
     try {
       await login(username, password);
-      alert('Login successful!');
-      window.location.href = '/wishlist';
+      navigate('/wishlist');
     } catch (error) {
       console.error(error);
-      alert('Login failed');
+      setErrorMsg('Inloggning misslyckades. Kontrollera användarnamn eller lösenord.');
     }
   };
 
@@ -29,25 +33,32 @@ const Login = () => {
       }}
     >
       <h2 style={{ marginBottom: '1rem' }}>Login</h2>
+
       <div style={{ marginBottom: '1rem' }}>
         <input
           type="text"
           placeholder="Username"
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
           style={{ padding: '0.5rem', width: '100%' }}
         />
       </div>
+
       <div style={{ marginBottom: '1rem' }}>
         <input
           type="password"
           placeholder="Password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={{ padding: '0.5rem', width: '100%' }}
         />
       </div>
+
       <button onClick={handleLogin} style={{ padding: '0.5rem 1rem', marginBottom: '1rem' }}>
         Login
       </button>
+
+      {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
 
       <hr style={{ margin: '1.5rem 0' }} />
 
@@ -56,7 +67,7 @@ const Login = () => {
           Om du ej har registrerat dig:
         </p>
         <button
-          onClick={() => (window.location.href = '/register')}
+          onClick={() => navigate('/register')}
           style={{
             padding: '0.5rem 1rem',
             backgroundColor: '#6c63ff',

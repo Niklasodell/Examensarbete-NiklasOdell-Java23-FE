@@ -1,4 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const buttonStyle = {
   backgroundColor: 'white',
@@ -26,39 +27,26 @@ const deleteButtonStyle = {
 
 const Header = () => {
   const navigate = useNavigate();
+  const { logout, deleteAccount } = useAuth();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:8080/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    localStorage.removeItem("token");
+    await logout();
     navigate("/login");
   };
 
   const handleDeleteAccount = async () => {
-    const confirmed = window.confirm("Är du säker på att du vill ta bort ditt konto?");
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch("http://localhost:8080/api/auth/delete", {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        alert("Ditt konto har tagits bort.");
-        localStorage.removeItem("token");
-        navigate("/login");
-      } else {
-        alert("Kunde inte ta bort kontot.");
-      }
-    } catch (error) {
-      console.error("Fel vid borttagning:", error);
-      alert("Ett fel uppstod.");
-    }
-  };
+  const confirmed = window.confirm("Är du säker på att du vill ta bort ditt konto?");
+  if (!confirmed) return;
+  
+  const success = await deleteAccount();
+  if (success) {
+    alert("Ditt konto har tagits bort.");
+    localStorage.removeItem("token");
+    navigate("/login");
+  } else {
+    alert("Kunde inte ta bort kontot.");
+  }
+};
 
   return (
     <header

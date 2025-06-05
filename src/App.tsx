@@ -5,13 +5,15 @@ import Register from './components/Register';
 import Wishlist from './components/Wishlist';
 import SearchBar from './components/SearchBar';
 import Header from './components/Header';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 const AppContent: React.FC = () => {
-  const isAuthenticated = !!localStorage.getItem('token');
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   const hideHeader = location.pathname === "/login" || location.pathname === "/register";
-  const isCenteredPage = location.pathname === "/login" || location.pathname === "/register";
+  const isCenteredPage = hideHeader;
 
   return (
     <>
@@ -29,8 +31,22 @@ const AppContent: React.FC = () => {
           <Route path="/" element={<Navigate to={isAuthenticated ? "/wishlist" : "/login"} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/search" element={<SearchBar />} />
+          <Route
+            path="/wishlist"
+            element={
+              <PrivateRoute>
+                <Wishlist />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <PrivateRoute>
+                <SearchBar />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </>
@@ -40,7 +56,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 };
